@@ -1,0 +1,39 @@
+tracker:
+  init_conf_min: 0.5              # 低於此 conf 不建立新 track
+  hist_max: 30                    # memory bank 最多保留幾筆歷史特徵
+  emb_top_k: 5                    # Top-K 外觀聚合
+  app_tau: 0.07                   # 外觀 softmax 溫度（若你 build_C_app_topk 不用 softmax，可留作備用）
+  eps: 1.0e-12                    # 避免除以 0 / log(0)
+  # cost weights (fusion)
+  w_app: 1.0
+  w_bbox: 0.3
+  w_conf: 0.2
+  alpha: 1.0
+  beta: 0.5
+  # unmatched cost
+  unmatch_cost: 10.0              # unmatched 代價（給 Hungarian / PSO 的缺配懲罰）
+  # association gates @frame
+  cost_max: 50.0                  # Hungarian 接受門檻
+  max_age: 120                     # miss_count > max_age -> delete
+  ema_alpha: 0.9                  # EMA 更新外觀特徵的係數
+  conf_update_min: 0.55           # 低於此 conf 不更新外觀 bank
+  cost_update_max: 30.0           # 更新外觀的 cost 上限（通常比 cost_max 更嚴格）
+  maha_thr: 9.49                  # Mahalanobis gating 門檻（chi-square 4 dof, 0.95）
+  lost_reid_after: 50             # miss_count > 60 -> 進入 ReID-only stage（約 4 秒 @15FPS）
+  reid_sim_min: 0.6               # ReID-only 最小相似度門檻
+  reid_only_cost_max: 0.4         # = 1 - reid_sim_min（Hungarian 用 cost 門檻）
+
+model:
+  yolo_weight: "/Users/chou/Desktop/python/A-lightweight-Unsupervised-Feature-Extractor/yolov7-coco/YOLOv7 Model.pt"
+  encoder_weight: "/Users/chou/Desktop/python/A-lightweight-Unsupervised-Feature-Extractor/model/res/checkpoints/epoch_last.pt"
+  encoder_trt_engine: 
+  root: "model/res/val"
+  tau: 0.2                      # encoder 相似度 softmax 溫度  越小分佈越尖銳（更自信）
+
+yolo:
+  conf_thres: 0.55              # YOLO 偵測信心門檻 高：少假框但小物件易漏
+  iou_thres: 0.5                # NMS IoU 門檻
+  img_size: 640                # 輸入解析度 對小物件偵測影響最大
+  in_channels: 512
+  out_channels: 512
+  nms_candidates: 5

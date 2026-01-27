@@ -1,0 +1,67 @@
+update:
+  # cal_cost 超參數（成本建模層）
+  weight_app: 2.5               # 外觀相似度權重（embedding cosine / prob）
+  weight_bbox: 1.5              # 幾何成本權重（bbox center / scale）
+  weight_conf: 1.0              # confidence 變化成本權重
+  alpha: 0.5                    # bbox center cost 的比例係數
+  beta: 1.5                     # bbox scale cost 的比例係數（抑制尺寸抖動）
+
+  # assignment 穩定性約束
+  lambda_anchor: 1.5            # 偏離 Hungarian baseline 的懲罰
+  lambda_stay: 2                # 偏好沿用前一幀 assignment 的懲罰(越大懲罰越重)
+  hard_anchor: False            # 是否禁止偏離 Hungarian False = 軟約束（允許 PSO 修正）
+  invalid_penalty: 1e6          # 非法 assignment（越界 / 重複指派）的硬懲罰
+  forbid_penalty: 1e4           # 不合理 assignment（低機率 / 不在候選集合）的懲罰
+  hard_switch: true            # 是否完全禁止 ID switch
+  switch_margin: 3.0            # 新 assignment 必須比舊的好多少才允許切換 越大越不容易換 ID
+  switch_penalty: 1.5           # 發生切換時的額外成本（軟性抑制）
+  top_k: 10                      # 每個 track 允許考慮的 detection 候選數 控制 PSO 搜尋空間大小
+  pso_enable_frame: 60          # 第幾幀之後才啟用 PSO
+  p_update_min: 0.5            # 通常 >= 0.55~0.80，依 embedding 品質調
+  conf_update_min: 0.6         # 低 conf 不寫入 proto
+  bbox_center_max: 0.2         # dist/diag，0.05~0.15 常見
+  bbox_scale_max: 0.5           # |log(Ac/Ap)|，0.4~0.9 常見
+  freeze_proto_on_low_conf: true
+                               
+solver:
+  # PSO 搜尋參數（搜尋策略層）
+  num_particles: 40             # 粒子數（候選 assignment 數） 多 = 搜尋更好但較慢
+  max_iters: 15                 # PSO 迭代次數
+  p_inertia: 0.9                # 保持目前 assignment 的機率 越大越穩定、越不跳
+  p_to_pbest: 0.2              # 朝個體最佳解移動的機率
+  p_to_gbest: 0.7               # 朝全域最佳解移動的機率 偏大：快速收斂、但可能集體跳動
+  p_random: 0.001                # 隨機探索比例 小值：避免無意義亂跳
+  unmatch_prob: 0.02             # 將 track 指派為 unmatched (-1) 的機率 越大越容易暫時消失
+  init_mutation_rate: 0.1       # 初始化粒子時的擾動比例 小值：貼近 Hungarian 起點
+  step_mutation_rate: 0.1      # 每步更新的擾動比例 控制每次 PSO 移動幅度
+  seed: ""                      # 隨機種子
+
+frametracker:
+  # FrameTracker (追蹤層）
+  p_match_min: 0.45             # 最低匹配機率門檻 高門檻：不追低可信偵測
+  p_recover_min: 0.6          # re-attach 門檻，通常比 p_match_min 更嚴格
+  
+  eps: 1e-9                     # 數值穩定用 epsilon
+  ema_alpha: 0.90               # prototype / confidence EMA 係數  大：模型記憶長
+
+  max_miss: 360                  # 連續未匹配仍保留的幀數 12 @30FPS ≈ 0.4 秒
+  max_lost_frames: 1800          # lost_tracks 最長保留幀數 @30FPS ≈ 30 秒
+  #max_miss(短期偵測框丟失保留) + max_lost_frames(長期偵測框丟失保留)
+  max_lost_tracks: 40
+  max_tracks: 50                # 同時允許的最大 active track 數
+  unmatch_cost: 10.0            # assignment 為 -1 的成本 太小會導致容易消失
+  
+
+
+model:
+  yolo_weight: "model/yolov7/weights/yolov7_best.pt"
+  encoder_weight: "model/res/checkpoints/epoch_last.pt"
+  root: "model/res/val"
+  tau: 0.2                      # encoder 相似度 softmax 溫度  越小分佈越尖銳（更自信）
+
+yolo:
+  conf_thres: 0.7              # YOLO 偵測信心門檻 高：少假框但小物件易漏
+  iou_thres: 0.5                # NMS IoU 門檻
+  img_size: 640                # 輸入解析度 對小物件偵測影響最大
+  in_channels: 512
+  out_channels: 512

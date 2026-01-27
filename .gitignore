@@ -1,0 +1,26 @@
+model/yolov7/**/*.pt
+model/yolov7/weights/
+model/yolov7/weights/
+__pycache__/
+.DS_Store
+# Python venvs
+venv/
+.venv/
+venv*/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+

@@ -1,0 +1,25 @@
+yoloWeight: "model/yolov7/weights/yolov7_best.pt"
+yoloFeats: "model/res/checkpoints"
+datasetPath : "PATH/TO/YOUR/DATASET"
+ckpt: "PATH/TO/ENCORDER/CHECKPOINTS"
+warmupEpochs: 10
+epoch: 500
+isPreprocess: true
+isTraining: true
+isInference: true
+batch_size : 256
+prefetch_factor : 4
+num_workers : 8
+baseLr: 0.0001        # 1e-4
+minLr: 0.00001        # 1e-5
+max_norm: 7
+
+QAT:
+  isQAT: true
+  epoch: 10
+  lr_rate: 0.00001
+  minLr: 0.000001
+
+#test_4-5
+# baseLr : 0.001
+# minLr : 0.00001
