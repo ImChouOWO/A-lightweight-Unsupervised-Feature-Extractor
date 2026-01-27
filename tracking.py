@@ -1,9 +1,4 @@
-# multiproc_video_infer_B.py
- 
-# Multiprocessing pipeline (B):
-# - Decode process: cv2.VideoCapture -> infer_q (frames) + disp_q (frames)
-# - Infer process : YOLOv7 + Encoder + Tracker -> res_q (assignments + boxes only)
-# - Main process  : disp_q (frames) + res_q (results) -> draw + imshow (ONLY in main)
+
  
 
 from __future__ import annotations
