@@ -177,14 +177,14 @@ class MainInfer:
         from model.mainTracking import Tracking
 
         self.torch = torch
-        self.device = (
-            "cuda"
-            if torch.cuda.is_available()
-            else "mps"
-            if hasattr(torch.backends, "mps") and torch.backends.mps.is_available()
-            else "cpu"
-        )
-
+        # self.device = (
+        #     "cuda"
+        #     if torch.cuda.is_available()
+        #     else "mps"
+        #     if hasattr(torch.backends, "mps") and torch.backends.mps.is_available()
+        #     else "cpu"
+        # )
+        self.device = "cpu"
         self.conf = load_conf(CONFPATH)
 
         self.use_trt = (trt_engine_path is not None) and (self.device == "cuda")
@@ -201,7 +201,7 @@ class MainInfer:
                     warmup_epochs=10,
                     proj_dim=128,
                 )
-                .to(self.device)
+                .to(device=self.device, dtype=torch.float32)
                 .eval()
             )
 
@@ -212,6 +212,11 @@ class MainInfer:
             if ckpt_path is not None:
                 ckpt = torch.load(ckpt_path, map_location="cpu")
                 self.encoder.load_state_dict(ckpt["model"], strict=True)
+
+            self.encoder = self.encoder.to(
+                device=self.device,
+                dtype=torch.float32,
+            ).eval()
 
         # YOLO should be on same device as MainInfer for MPS stability
         self.yolo = yoloDet.YoloDetects(

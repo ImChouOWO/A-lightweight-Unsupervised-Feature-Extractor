@@ -51,7 +51,7 @@ class TrtEncoderRunner:
         self.in_shape = tuple(self.engine.get_tensor_shape(self.input_name))
 
     def __call__(self, x):
-        # x: torch.Tensor on CUDA, shape [N,512,10,10]
+        #  x: torch.Tensor on CUDA, shape [N,512,10,10]
         import torch
 
         if not x.is_cuda:
