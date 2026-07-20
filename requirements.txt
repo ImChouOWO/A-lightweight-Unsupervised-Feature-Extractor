@@ -1,3 +1,4 @@
+# A-lightweight-Unsupervised-Feature-Extractor requirements.txt
 numpy==1.26.4
 scipy==1.16.3
 pandas==2.3.3
@@ -44,3 +45,4 @@ humanfriendly==10.0
 
 protobuf==6.33.2
 filelock==3.19.1
+
