@@ -9,7 +9,7 @@
 ## Features
 
 This model is designed for **two-stage object tracking** tasks.  
-It uses **YOLO** as the upper-level feature extractor and integrates  
+It uses **YOLOV7** as the upper-level feature extractor and integrates  
 **Kalman Filtering** with the **Hungarian Algorithm** to perform object association.
 
 Under ideal conditions—where tracked objects remain within the camera view—the system can maintain  
