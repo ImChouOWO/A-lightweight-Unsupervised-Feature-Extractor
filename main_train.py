@@ -4,7 +4,7 @@ import os
 import torch.distributed as dist
 
 # torchrun --nproc_per_node=2 main_train.py
-
+# Training script for training the model, it will generate a log file in the specified path with the results of the training.
 if __name__ == "__main__":
     try:
         _train(path="model/conf")
