@@ -24,9 +24,9 @@ tracker:
   reid_only_cost_max: 0.4         # = 1 - reid_sim_min（Hungarian 用 cost 門檻）
 
 model:
-  yolo_weight: "/Users/chou/Desktop/python/A-lightweight-Unsupervised-Feature-Extractor/yolov7-coco/YOLOv7 Model.pt"
-  encoder_weight: "/Users/chou/Desktop/python/A-lightweight-Unsupervised-Feature-Extractor/model/res/checkpoints/epoch_last.pt"
-  encoder_trt_engine: 
+  yolo_weight: "path/to/yolo/weights.pt"  
+  encoder_weight: "path/to/encoder/weights.pt"
+  encoder_trt_engine: "path/to/encoder/trt_engine.onnx" #optional, if you want to use TensorRT engine for encoder
   root: "model/res/val"
   tau: 0.2                      # encoder 相似度 softmax 溫度  越小分佈越尖銳（更自信）
 
