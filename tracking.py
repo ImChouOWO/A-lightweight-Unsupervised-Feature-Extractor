@@ -515,15 +515,7 @@ def track(video_path: str, out_path: str, queue_size: int = 16, show_window: boo
                     for i, (x1, y1, x2, y2) in enumerate(boxes_xyxy):
                         c = float(confs[i]) if i < len(confs) else 0.0
                         cv2.rectangle(frame, (x1, y1), (x2, y2), BOX_COLOR, 2)
-                        cv2.putText(
-                            frame,
-                            f"D{i} conf:{c:.2f}",
-                            (x1, max(0, y1 - 5)),
-                            cv2.FONT_HERSHEY_SIMPLEX,
-                            0.8,
-                            (0, 0, 0),
-                            2,
-                        )
+                    
 
                     active_ids = [a["track_id"] for a in assignments]
                     id_manager.update(active_ids, frame_idx)

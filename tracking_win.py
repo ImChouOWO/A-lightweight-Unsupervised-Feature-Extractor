@@ -610,15 +610,7 @@ def track(
                     for i, (x1, y1, x2, y2) in enumerate(boxes_xyxy):
                         c = float(confs[i]) if i < len(confs) else 0.0
                         cv2.rectangle(frame_np, (x1, y1), (x2, y2), (255, 255, 0), 2)
-                        cv2.putText(
-                            frame_np,
-                            f"D{i}:{c:.2f}",
-                            (x1, max(0, y1 - 5)),
-                            cv2.FONT_HERSHEY_SIMPLEX,
-                            0.8,
-                            (0, 0, 0),
-                            2,
-                        )
+                
 
                     active_ids = [a["track_id"] for a in assignments]
                     id_manager.update(active_ids, frame_idx)
